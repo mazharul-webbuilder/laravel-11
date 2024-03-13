@@ -1,66 +1,70 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h2>What's new in Laravel 11</h2>
+<hr/>
+<ul>
+<li>We can define where our application load view from, run command php artisan
+    config:publish type or select view. you will find a view.php file inside
+    config folder. In paths array you can specify your views file path. you can add multiple
+    paths
+</li>
+<li>
+    In laravel 11 custom service providers
+    will auto registered by laravel itself. Just create a service provider using
+    artisan command and use it. If you dont create service provider by artisan command 
+    you can register it manually to Bootstrap/providers.php
+</li>
+<li>
+    In laravel 11, by default there is no middleware, where in previous version laravel 10 or lesser they
+    had 9 default middleware on http/middleware folder. Laravel shift those middleware to 
+    foundation level, that means we can't directly modify those middleware. To do so, go to
+    App/Providers/AppServiceProvider.php file on boot method 
+    <pre>
+        TrimStrings::except(['secret']); // for remote white space form all input except
+        RedirectIfAuthenticated::redirectUsing(fn($request) => route('dashboard')); 
+    </pre>
+</li>
+<li>
+    There is not Http Kernal in new laravel 11, so how we can register custom middleware, to do so
+    go to bootstap/app.php file, 
+    <pre>
+        ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(
+            append: [\App\Http\Middleware\LogRequestEndpoint::class],
+            prepend: [\App\Http\Middleware\AddMiddlewareToPrependMiddleware::class]
+        )
+        $middleware->api(
+            append: [],
+            prepend: []
+        );
+    })
+    </pre>
+    appended item with add to beginning of array and prepended item will add at the end of list
+</li>
+<li>
+    In laravel 11 there is no Exception/handler.php file. to register exception
+    go to bootstrap/app.php and do like this as earlier version
+    <pre>
+        // Customize ValidationException response  Custom Request Class
+        $exceptions->renderable(function (ValidationException $exception){
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Error',
+                'data' => null,
+                'errors' => $exception->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+    </pre>
+</li>
+<li>
+    In Laravel 11 all custom command will automatically register and 
+    we can Schedule task direct from console.php file lived in routes folder.
+</li>
+<li>
+    Be default there is no api.php file. To work with api run artisan command
+    php artisan api:install it will install sanctum as a default api provider
+</li>
+<li>Default laravel 11 database driver is sqlite. You can change it immediately</li>
+<li>Laravel 11 add new feature Dumpable trait. which allow us to add new custom method
+    method on it.
+</li>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+</ul>
