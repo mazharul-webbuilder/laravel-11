@@ -66,5 +66,4 @@
 <li>Laravel 11 add new feature Dumpable trait. which allow us to add new custom method
     method on it.
 </li>
-
 </ul>
